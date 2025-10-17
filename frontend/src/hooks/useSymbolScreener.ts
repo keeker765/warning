@@ -22,8 +22,6 @@ export function useSymbolScreener(symbols: string[]): ScreenerResult {
     async function load() {
       if (!symbols.length) {
         setInsights([]);
-        setLoading(false);
-        setError(null);
         return;
       }
 
@@ -35,9 +33,9 @@ export function useSymbolScreener(symbols: string[]): ScreenerResult {
           symbols.map(async (symbol) => {
             try {
               const [tickerResponse, klineResponse] = await Promise.all([
-                fetch(`https://fapi.binance.com/fapi/v1/ticker/24hr?symbol=${symbol}`),
+                fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`),
                 fetch(
-                  `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${KLINE_INTERVAL}&limit=${KLINE_LIMIT}`,
+                  `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${KLINE_INTERVAL}&limit=${KLINE_LIMIT}`,
                 ),
               ]);
 

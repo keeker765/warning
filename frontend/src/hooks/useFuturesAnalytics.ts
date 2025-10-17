@@ -9,7 +9,7 @@ import type {
 } from '../types/market';
 
 const API_BASE = 'https://fapi.binance.com/futures/data';
-const DEFAULT_PERIOD = '1h';
+const PERIOD = '1h';
 const LIMIT = 48;
 
 type FetchError = { code?: number; msg?: string };
@@ -28,8 +28,8 @@ const SAMPLE_STATE: FetchState = {
   usingSample: true,
 };
 
-async function request<T>(url: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(url, init);
+async function request<T>(url: string): Promise<T> {
+  const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}`);
   }
@@ -208,23 +208,11 @@ function mergeAnalytics(overrides: Partial<FuturesAnalytics>, symbol: string): F
   };
 }
 
-export interface UseFuturesAnalyticsOptions {
-  period?: string;
-  apiKey?: string;
-  refreshMs?: number;
-}
-
-export function useFuturesAnalytics(symbol: string, options: UseFuturesAnalyticsOptions = {}) {
+export function useFuturesAnalytics(symbol: string) {
   const [state, setState] = useState<FetchState>(() => SAMPLE_STATE);
-  const { period = DEFAULT_PERIOD, apiKey, refreshMs } = options;
-  const headers = useMemo<HeadersInit | undefined>(() => {
-    if (!apiKey) return undefined;
-    return { 'X-MBX-APIKEY': apiKey };
-  }, [apiKey]);
 
   useEffect(() => {
     let cancelled = false;
-    const abortController = new AbortController();
 
     async function load() {
       setState({
@@ -235,25 +223,13 @@ export function useFuturesAnalytics(symbol: string, options: UseFuturesAnalytics
       });
 
       try {
-        const requestInit: RequestInit = {
-          headers,
-          signal: abortController.signal,
-        };
-
-        const [
-          openInterestRaw,
-          topAccountsRaw,
-          topPositionsRaw,
-          globalAccountsRaw,
-          takerVolumeRaw,
-          basisRaw,
-        ] = await Promise.all([
-          request<any[]>(`${API_BASE}/openInterestHist?symbol=${symbol}&period=${period}&limit=${LIMIT}`, requestInit),
-          request<any[]>(`${API_BASE}/topLongShortAccountRatio?symbol=${symbol}&period=${period}&limit=${LIMIT}`, requestInit),
-          request<any[]>(`${API_BASE}/topLongShortPositionRatio?symbol=${symbol}&period=${period}&limit=${LIMIT}`, requestInit),
-          request<any[]>(`${API_BASE}/globalLongShortAccountRatio?symbol=${symbol}&period=${period}&limit=${LIMIT}`, requestInit),
-          request<any[]>(`${API_BASE}/takerlongshortRatio?symbol=${symbol}&period=${period}&limit=${LIMIT}`, requestInit),
-          request<any[]>(`${API_BASE}/premiumIndex?symbol=${symbol}&interval=${period}&limit=${LIMIT}`, requestInit),
+        const [openInterestRaw, topAccountsRaw, topPositionsRaw, globalAccountsRaw, takerVolumeRaw, basisRaw] = await Promise.all([
+          request<any[]>(`${API_BASE}/openInterestHist?symbol=${symbol}&period=${PERIOD}&limit=${LIMIT}`),
+          request<any[]>(`${API_BASE}/topLongShortAccountRatio?symbol=${symbol}&period=${PERIOD}&limit=${LIMIT}`),
+          request<any[]>(`${API_BASE}/topLongShortPositionRatio?symbol=${symbol}&period=${PERIOD}&limit=${LIMIT}`),
+          request<any[]>(`${API_BASE}/globalLongShortAccountRatio?symbol=${symbol}&period=${PERIOD}&limit=${LIMIT}`),
+          request<any[]>(`${API_BASE}/takerlongshortRatio?symbol=${symbol}&period=${PERIOD}&limit=${LIMIT}`),
+          request<any[]>(`${API_BASE}/premiumIndex?symbol=${symbol}&interval=${PERIOD}&limit=${LIMIT}`),
         ]);
 
         const openInterest = parseOpenInterest(openInterestRaw);
@@ -286,19 +262,10 @@ export function useFuturesAnalytics(symbol: string, options: UseFuturesAnalytics
 
     load();
 
-    let intervalId: number | null = null;
-    if (refreshMs && refreshMs > 0) {
-      intervalId = window.setInterval(load, refreshMs);
-    }
-
     return () => {
       cancelled = true;
-      abortController.abort();
-      if (intervalId) {
-        window.clearInterval(intervalId);
-      }
     };
-  }, [headers, period, refreshMs, symbol]);
+  }, [symbol]);
 
   return useMemo(
     () => ({
