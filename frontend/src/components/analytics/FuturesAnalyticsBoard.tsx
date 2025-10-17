@@ -40,29 +40,42 @@ function formatNumber(value: number, fraction = 2) {
   return value.toFixed(fraction);
 }
 
+const GRID_COLOR = 'rgba(255, 255, 255, 0.08)';
+const AXIS_COLOR = 'rgba(255, 255, 255, 0.55)';
+const TOOLTIP_BACKGROUND = '#1e2329';
+
+function tooltipStyle(borderColor: string) {
+  return {
+    background: TOOLTIP_BACKGROUND,
+    borderRadius: 10,
+    border: `1px solid ${borderColor}`,
+    color: '#f5f7fa',
+  };
+}
+
 function renderOpenInterestChart(data: FuturesAnalytics) {
   return (
     <ResponsiveContainer width="100%" height={200}>
       <AreaChart data={data.openInterest}>
         <defs>
           <linearGradient id="openInterestGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.7} />
-            <stop offset="100%" stopColor="#0f172a" stopOpacity={0} />
+            <stop offset="0%" stopColor="#f0b90b" stopOpacity={0.7} />
+            <stop offset="100%" stopColor="#0b0e11" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <CartesianGrid stroke="rgba(148, 163, 184, 0.2)" vertical={false} />
-        <XAxis dataKey="time" tickFormatter={formatTime} stroke="rgba(148, 163, 184, 0.6)" />
+        <CartesianGrid stroke={GRID_COLOR} vertical={false} />
+        <XAxis dataKey="time" tickFormatter={formatTime} stroke={AXIS_COLOR} />
         <YAxis
-          stroke="rgba(148, 163, 184, 0.6)"
+          stroke={AXIS_COLOR}
           tickFormatter={(value) => formatNumber(value, 0)}
           width={70}
         />
         <Tooltip
-          contentStyle={{ background: 'rgba(15,23,42,0.9)', borderRadius: 12, border: '1px solid rgba(56,189,248,0.4)' }}
+          contentStyle={tooltipStyle('rgba(240, 185, 11, 0.35)')}
           formatter={(value: number) => [`${formatNumber(value, 0)} 张`, '持仓量']}
           labelFormatter={(label) => `时间：${formatTime(Number(label))}`}
         />
-        <Area type="monotone" dataKey="openInterest" stroke="#38bdf8" strokeWidth={2} fill="url(#openInterestGradient)" />
+        <Area type="monotone" dataKey="openInterest" stroke="#f0b90b" strokeWidth={2} fill="url(#openInterestGradient)" />
       </AreaChart>
     </ResponsiveContainer>
   );
@@ -128,26 +141,22 @@ export default function FuturesAnalyticsBoard({ symbol, period, apiKey }: Future
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={data.topAccountsRatio}>
-              <CartesianGrid stroke="rgba(148, 163, 184, 0.2)" vertical={false} />
-              <XAxis dataKey="time" tickFormatter={formatTime} stroke="rgba(148, 163, 184, 0.6)" />
+              <CartesianGrid stroke={GRID_COLOR} vertical={false} />
+              <XAxis dataKey="time" tickFormatter={formatTime} stroke={AXIS_COLOR} />
               <YAxis
                 domain={[0, 100]}
                 tickFormatter={(value) => `${value.toFixed(0)}%`}
-                stroke="rgba(148, 163, 184, 0.6)"
+                stroke={AXIS_COLOR}
                 width={60}
               />
               <Tooltip
-                contentStyle={{
-                  background: 'rgba(15,23,42,0.9)',
-                  borderRadius: 12,
-                  border: '1px solid rgba(129,140,248,0.35)',
-                }}
+                contentStyle={tooltipStyle('rgba(240, 185, 11, 0.35)')}
                 formatter={(value: number, name) => [`${value.toFixed(2)}%`, name === 'long' ? '多头占比' : '空头占比']}
                 labelFormatter={(label) => `时间：${formatTime(Number(label))}`}
               />
               <Legend />
-              <Line type="monotone" dataKey="long" stroke="#4ade80" strokeWidth={2} name="多头" dot={false} />
-              <Line type="monotone" dataKey="short" stroke="#f87171" strokeWidth={2} name="空头" dot={false} />
+              <Line type="monotone" dataKey="long" stroke="#0ecb81" strokeWidth={2} name="多头" dot={false} />
+              <Line type="monotone" dataKey="short" stroke="#f6465d" strokeWidth={2} name="空头" dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </article>
@@ -158,26 +167,22 @@ export default function FuturesAnalyticsBoard({ symbol, period, apiKey }: Future
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={data.topPositionsRatio}>
-              <CartesianGrid stroke="rgba(148, 163, 184, 0.2)" vertical={false} />
-              <XAxis dataKey="time" tickFormatter={formatTime} stroke="rgba(148, 163, 184, 0.6)" />
+              <CartesianGrid stroke={GRID_COLOR} vertical={false} />
+              <XAxis dataKey="time" tickFormatter={formatTime} stroke={AXIS_COLOR} />
               <YAxis
                 domain={[0, 100]}
                 tickFormatter={(value) => `${value.toFixed(0)}%`}
-                stroke="rgba(148, 163, 184, 0.6)"
+                stroke={AXIS_COLOR}
                 width={60}
               />
               <Tooltip
-                contentStyle={{
-                  background: 'rgba(15,23,42,0.9)',
-                  borderRadius: 12,
-                  border: '1px solid rgba(96,165,250,0.35)',
-                }}
+                contentStyle={tooltipStyle('rgba(240, 185, 11, 0.35)')}
                 formatter={(value: number, name) => [`${value.toFixed(2)}%`, name === 'long' ? '多头仓位' : '空头仓位']}
                 labelFormatter={(label) => `时间：${formatTime(Number(label))}`}
               />
               <Legend />
-              <Line type="monotone" dataKey="long" stroke="#38bdf8" strokeWidth={2} name="多头" dot={false} />
-              <Line type="monotone" dataKey="short" stroke="#facc15" strokeWidth={2} name="空头" dot={false} />
+              <Line type="monotone" dataKey="long" stroke="#f0b90b" strokeWidth={2} name="多头" dot={false} />
+              <Line type="monotone" dataKey="short" stroke="#f6465d" strokeWidth={2} name="空头" dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </article>
@@ -188,26 +193,22 @@ export default function FuturesAnalyticsBoard({ symbol, period, apiKey }: Future
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={data.globalAccountsRatio}>
-              <CartesianGrid stroke="rgba(148, 163, 184, 0.2)" vertical={false} />
-              <XAxis dataKey="time" tickFormatter={formatTime} stroke="rgba(148, 163, 184, 0.6)" />
+              <CartesianGrid stroke={GRID_COLOR} vertical={false} />
+              <XAxis dataKey="time" tickFormatter={formatTime} stroke={AXIS_COLOR} />
               <YAxis
                 domain={[0, 100]}
                 tickFormatter={(value) => `${value.toFixed(0)}%`}
-                stroke="rgba(148, 163, 184, 0.6)"
+                stroke={AXIS_COLOR}
                 width={60}
               />
               <Tooltip
-                contentStyle={{
-                  background: 'rgba(15,23,42,0.9)',
-                  borderRadius: 12,
-                  border: '1px solid rgba(45,212,191,0.35)',
-                }}
+                contentStyle={tooltipStyle('rgba(240, 185, 11, 0.35)')}
                 formatter={(value: number, name) => [`${value.toFixed(2)}%`, name === 'long' ? '多头账户' : '空头账户']}
                 labelFormatter={(label) => `时间：${formatTime(Number(label))}`}
               />
               <Legend />
-              <Line type="monotone" dataKey="long" stroke="#2dd4bf" strokeWidth={2} name="多头" dot={false} />
-              <Line type="monotone" dataKey="short" stroke="#f97316" strokeWidth={2} name="空头" dot={false} />
+              <Line type="monotone" dataKey="long" stroke="#0ecb81" strokeWidth={2} name="多头" dot={false} />
+              <Line type="monotone" dataKey="short" stroke="#f6465d" strokeWidth={2} name="空头" dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </article>
@@ -218,19 +219,15 @@ export default function FuturesAnalyticsBoard({ symbol, period, apiKey }: Future
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <ComposedChart data={data.openInterestDelta}>
-              <CartesianGrid stroke="rgba(148, 163, 184, 0.2)" vertical={false} />
-              <XAxis dataKey="time" tickFormatter={formatTime} stroke="rgba(148, 163, 184, 0.6)" />
+              <CartesianGrid stroke={GRID_COLOR} vertical={false} />
+              <XAxis dataKey="time" tickFormatter={formatTime} stroke={AXIS_COLOR} />
               <YAxis
                 tickFormatter={(value) => formatNumber(value, 0)}
-                stroke="rgba(148, 163, 184, 0.6)"
+                stroke={AXIS_COLOR}
                 width={70}
               />
               <Tooltip
-                contentStyle={{
-                  background: 'rgba(15,23,42,0.9)',
-                  borderRadius: 12,
-                  border: '1px solid rgba(249,115,22,0.35)',
-                }}
+                contentStyle={tooltipStyle('rgba(240, 185, 11, 0.35)')}
                 formatter={(value: number, name) => [
                   `${formatNumber(Math.abs(value), 0)} 张`,
                   name === 'increase' ? '增持' : '减持',
@@ -238,8 +235,8 @@ export default function FuturesAnalyticsBoard({ symbol, period, apiKey }: Future
                 labelFormatter={(label) => `时间：${formatTime(Number(label))}`}
               />
               <Legend />
-              <Bar dataKey="increase" name="增持" fill="#4ade80" stackId="delta" radius={[6, 6, 0, 0]} />
-              <Bar dataKey="decrease" name="减持" fill="#f97316" stackId="delta" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="increase" name="增持" fill="#0ecb81" stackId="delta" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="decrease" name="减持" fill="#f6465d" stackId="delta" radius={[6, 6, 0, 0]} />
             </ComposedChart>
           </ResponsiveContainer>
         </article>
@@ -252,23 +249,19 @@ export default function FuturesAnalyticsBoard({ symbol, period, apiKey }: Future
             <ComposedChart data={data.basis}>
               <defs>
                 <linearGradient id="basisGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#facc15" stopOpacity={0.65} />
-                  <stop offset="100%" stopColor="#0f172a" stopOpacity={0} />
+                  <stop offset="0%" stopColor="#f0b90b" stopOpacity={0.6} />
+                  <stop offset="100%" stopColor="#0b0e11" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid stroke="rgba(148, 163, 184, 0.2)" vertical={false} />
-              <XAxis dataKey="time" tickFormatter={formatTime} stroke="rgba(148, 163, 184, 0.6)" />
+              <CartesianGrid stroke={GRID_COLOR} vertical={false} />
+              <XAxis dataKey="time" tickFormatter={formatTime} stroke={AXIS_COLOR} />
               <YAxis
                 tickFormatter={(value) => formatNumber(value, 2)}
-                stroke="rgba(148, 163, 184, 0.6)"
+                stroke={AXIS_COLOR}
                 width={70}
               />
               <Tooltip
-                contentStyle={{
-                  background: 'rgba(15,23,42,0.9)',
-                  borderRadius: 12,
-                  border: '1px solid rgba(250,204,21,0.35)',
-                }}
+                contentStyle={tooltipStyle('rgba(240, 185, 11, 0.35)')}
                 formatter={(value: number, name) => {
                   if (name === 'basis') {
                     return [`${formatNumber(value, 2)}`, '基差'];
@@ -278,9 +271,9 @@ export default function FuturesAnalyticsBoard({ symbol, period, apiKey }: Future
                 labelFormatter={(label) => `时间：${formatTime(Number(label))}`}
               />
               <Legend />
-              <Area type="monotone" dataKey="basis" name="基差" fill="url(#basisGradient)" stroke="#facc15" strokeWidth={2} />
-              <Line type="monotone" dataKey="markPrice" name="永续合约" stroke="#fbbf24" strokeWidth={1.5} dot={false} />
-              <Line type="monotone" dataKey="indexPrice" name="指数价格" stroke="#38bdf8" strokeWidth={1.5} dot={false} />
+              <Area type="monotone" dataKey="basis" name="基差" fill="url(#basisGradient)" stroke="#f0b90b" strokeWidth={2} />
+              <Line type="monotone" dataKey="markPrice" name="永续合约" stroke="#f0b90b" strokeWidth={1.5} dot={false} />
+              <Line type="monotone" dataKey="indexPrice" name="指数价格" stroke="#8d939e" strokeWidth={1.5} dot={false} />
             </ComposedChart>
           </ResponsiveContainer>
         </article>
@@ -291,19 +284,15 @@ export default function FuturesAnalyticsBoard({ symbol, period, apiKey }: Future
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <ComposedChart data={data.takerVolume}>
-              <CartesianGrid stroke="rgba(148, 163, 184, 0.2)" vertical={false} />
-              <XAxis dataKey="time" tickFormatter={formatTime} stroke="rgba(148, 163, 184, 0.6)" />
+              <CartesianGrid stroke={GRID_COLOR} vertical={false} />
+              <XAxis dataKey="time" tickFormatter={formatTime} stroke={AXIS_COLOR} />
               <YAxis
                 tickFormatter={(value) => formatNumber(value, 0)}
-                stroke="rgba(148, 163, 184, 0.6)"
+                stroke={AXIS_COLOR}
                 width={70}
               />
               <Tooltip
-                contentStyle={{
-                  background: 'rgba(15,23,42,0.9)',
-                  borderRadius: 12,
-                  border: '1px solid rgba(56,189,248,0.35)',
-                }}
+                contentStyle={tooltipStyle('rgba(240, 185, 11, 0.35)')}
                 formatter={(value: number, name) => {
                   if (name === 'ratio') {
                     return [`${value.toFixed(3)}`, '买卖比'];
@@ -313,9 +302,9 @@ export default function FuturesAnalyticsBoard({ symbol, period, apiKey }: Future
                 labelFormatter={(label) => `时间：${formatTime(Number(label))}`}
               />
               <Legend />
-              <Bar dataKey="buyVolume" name="主动买入" fill="#38bdf8" radius={[6, 6, 0, 0]} />
-              <Bar dataKey="sellVolume" name="主动卖出" fill="#f87171" radius={[6, 6, 0, 0]} />
-              <Line type="monotone" dataKey="ratio" name="买卖比" stroke="#c084fc" strokeWidth={2} dot={false} />
+              <Bar dataKey="buyVolume" name="主动买入" fill="#0ecb81" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="sellVolume" name="主动卖出" fill="#f6465d" radius={[6, 6, 0, 0]} />
+              <Line type="monotone" dataKey="ratio" name="买卖比" stroke="#f0b90b" strokeWidth={2} dot={false} />
             </ComposedChart>
           </ResponsiveContainer>
         </article>

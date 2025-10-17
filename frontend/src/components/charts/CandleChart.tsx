@@ -18,12 +18,12 @@ interface CandleChartProps {
 }
 
 const CHART_BACKGROUND = {
-  dark: '#101522',
+  dark: '#11161c',
   light: '#ffffff',
 } as const;
 
 const TEXT_COLOR = {
-  dark: '#f7f8f8',
+  dark: '#f5f7fa',
   light: '#1f2933',
 } as const;
 
@@ -43,40 +43,40 @@ function CandleChart({ data, theme = 'dark', height = 420 }: CandleChartProps) {
       },
       rightPriceScale: {
         visible: true,
-        borderColor: '#1f2933',
+        borderColor: '#2b3139',
       },
       timeScale: {
-        borderColor: '#1f2933',
+        borderColor: '#2b3139',
         timeVisible: true,
         secondsVisible: false,
       },
       crosshair: {
         mode: CrosshairMode.Normal,
         vertLine: {
-          color: 'rgba(224, 224, 255, 0.3)',
+          color: 'rgba(255, 255, 255, 0.2)',
           style: LineStyle.Dashed,
-          labelBackgroundColor: '#3b82f6',
+          labelBackgroundColor: '#f0b90b',
         },
         horzLine: {
-          color: 'rgba(224, 224, 255, 0.3)',
+          color: 'rgba(255, 255, 255, 0.2)',
           style: LineStyle.Dashed,
-          labelBackgroundColor: '#3b82f6',
+          labelBackgroundColor: '#f0b90b',
         },
       },
       grid: {
-        vertLines: { color: 'rgba(47, 49, 65, 0.6)' },
-        horzLines: { color: 'rgba(47, 49, 65, 0.6)' },
+        vertLines: { color: 'rgba(255, 255, 255, 0.06)' },
+        horzLines: { color: 'rgba(255, 255, 255, 0.06)' },
       },
       height,
     });
 
     const candleSeries = chart.addCandlestickSeries({
-      upColor: '#0fba81',
-      downColor: '#ef4444',
-      borderUpColor: '#0fba81',
-      borderDownColor: '#ef4444',
-      wickUpColor: '#0fba81',
-      wickDownColor: '#ef4444',
+      upColor: '#0ecb81',
+      downColor: '#f6465d',
+      borderUpColor: '#0ecb81',
+      borderDownColor: '#f6465d',
+      wickUpColor: '#0ecb81',
+      wickDownColor: '#f6465d',
     });
 
     chartRef.current = chart;

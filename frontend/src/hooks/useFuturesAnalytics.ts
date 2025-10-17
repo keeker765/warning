@@ -88,14 +88,29 @@ function parseOpenInterest(payload: any[]): OpenInterestPoint[] {
     .filter((item) => Number.isFinite(item.time) && Number.isFinite(item.openInterest));
 }
 
+function normalizePercent(value: number): number {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+  const scaled = value <= 1 ? value * 100 : value;
+  return Number(scaled.toFixed(2));
+}
+
 function parseLongShort(payload: any[]): LongShortRatioPoint[] {
   return payload
-    .map((item) => ({
-      time: Number(item.timestamp),
-      long: Number(item.longAccount ?? item.longPosition ?? 0),
-      short: Number(item.shortAccount ?? item.shortPosition ?? 0),
-      ratio: Number(item.longShortRatio ?? 0),
-    }))
+    .map((item) => {
+      const longRaw = Number(item.longAccount ?? item.longPosition ?? 0);
+      const shortRaw = Number(item.shortAccount ?? item.shortPosition ?? 0);
+      const long = normalizePercent(longRaw);
+      const short = normalizePercent(shortRaw);
+      const ratio = short === 0 ? 0 : Number((long / short).toFixed(3));
+      return {
+        time: Number(item.timestamp),
+        long,
+        short,
+        ratio,
+      };
+    })
     .filter((item) => Number.isFinite(item.time) && Number.isFinite(item.long) && Number.isFinite(item.short));
 }
 

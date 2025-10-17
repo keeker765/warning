@@ -48,32 +48,32 @@ function DepthChart({ bids, asks }: DepthChartProps) {
       <AreaChart data={depthData as DepthPoint[]} margin={{ top: 20, right: 20, bottom: 0, left: 0 }}>
         <defs>
           <linearGradient id="bidGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#0fba81" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#0fba81" stopOpacity={0} />
+            <stop offset="5%" stopColor="#0ecb81" stopOpacity={0.75} />
+            <stop offset="95%" stopColor="#0ecb81" stopOpacity={0} />
           </linearGradient>
           <linearGradient id="askGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+            <stop offset="5%" stopColor="#f6465d" stopOpacity={0.75} />
+            <stop offset="95%" stopColor="#f6465d" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <CartesianGrid stroke="rgba(148, 163, 184, 0.2)" />
+        <CartesianGrid stroke="rgba(255, 255, 255, 0.08)" />
         <XAxis
           dataKey="price"
           type="number"
           tickFormatter={(value) => value.toLocaleString()}
           domain={['auto', 'auto']}
-          stroke="rgba(148, 163, 184, 0.8)"
+          stroke="rgba(255, 255, 255, 0.55)"
         />
-        <YAxis tickFormatter={(value) => value.toLocaleString()} stroke="rgba(148, 163, 184, 0.8)" />
+        <YAxis tickFormatter={(value) => value.toLocaleString()} stroke="rgba(255, 255, 255, 0.55)" />
         <Tooltip
-          contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: 8 }}
+          contentStyle={{ backgroundColor: '#1e2329', border: '1px solid #2b3139', borderRadius: 8, color: '#f5f7fa' }}
           labelFormatter={(label) => `价格 ${Number(label).toLocaleString()}`}
           formatter={tooltipFormatter}
         />
         <Area
           type="monotone"
           dataKey="bidTotal"
-          stroke="#0fba81"
+          stroke="#0ecb81"
           fill="url(#bidGradient)"
           isAnimationActive={false}
           connectNulls
@@ -81,7 +81,7 @@ function DepthChart({ bids, asks }: DepthChartProps) {
         <Area
           type="monotone"
           dataKey="askTotal"
-          stroke="#ef4444"
+          stroke="#f6465d"
           fill="url(#askGradient)"
           isAnimationActive={false}
           connectNulls
