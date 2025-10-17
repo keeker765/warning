@@ -11,7 +11,7 @@ export function useTrades(symbol: string) {
 
     async function loadTrades() {
       try {
-        const response = await fetch(`https://api.binance.com/api/v3/trades?symbol=${symbol}&limit=${MAX_TRADES}`);
+        const response = await fetch(`https://fapi.binance.com/fapi/v1/trades?symbol=${symbol}&limit=${MAX_TRADES}`);
         const data = await response.json();
         if (!Array.isArray(data)) return;
         if (active) {
@@ -40,7 +40,7 @@ export function useTrades(symbol: string) {
   }, [symbol]);
 
   useEffect(() => {
-    const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@trade`);
+    const ws = new WebSocket(`wss://fstream.binance.com/ws/${symbol.toLowerCase()}@trade`);
 
     ws.onmessage = (event) => {
       const payload = JSON.parse(event.data);

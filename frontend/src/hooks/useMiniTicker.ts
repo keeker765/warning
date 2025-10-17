@@ -9,7 +9,7 @@ export function useMiniTicker(symbol: string) {
 
     async function loadTicker() {
       try {
-        const response = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`);
+        const response = await fetch(`https://fapi.binance.com/fapi/v1/ticker/24hr?symbol=${symbol}`);
         const json = await response.json();
         if (!json || json.code) return;
         if (active) {
@@ -35,7 +35,7 @@ export function useMiniTicker(symbol: string) {
   }, [symbol]);
 
   useEffect(() => {
-    const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@miniTicker`);
+    const ws = new WebSocket(`wss://fstream.binance.com/ws/${symbol.toLowerCase()}@miniTicker`);
 
     ws.onmessage = (event) => {
       const payload = JSON.parse(event.data);

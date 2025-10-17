@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   Area,
   AreaChart,
@@ -17,6 +18,8 @@ import type { FuturesAnalytics } from '../../hooks/useFuturesAnalytics';
 
 interface FuturesAnalyticsBoardProps {
   symbol: string;
+  period: string;
+  apiKey?: string;
 }
 
 function formatTime(time: number) {
@@ -65,15 +68,46 @@ function renderOpenInterestChart(data: FuturesAnalytics) {
   );
 }
 
-export default function FuturesAnalyticsBoard({ symbol }: FuturesAnalyticsBoardProps) {
-  const { data, loading, error, usingSample } = useFuturesAnalytics(symbol);
+function periodToMs(value: string): number | null {
+  const match = value.match(/^(\d+)([mhd])$/);
+  if (!match) return null;
+  const amount = Number(match[1]);
+  if (!Number.isFinite(amount)) return null;
+  const unit = match[2];
+  switch (unit) {
+    case 'm':
+      return amount * 60_000;
+    case 'h':
+      return amount * 60 * 60_000;
+    case 'd':
+      return amount * 24 * 60 * 60_000;
+    default:
+      return null;
+  }
+}
+
+export default function FuturesAnalyticsBoard({ symbol, period, apiKey }: FuturesAnalyticsBoardProps) {
+  const refreshMs = useMemo(() => {
+    const parsed = periodToMs(period);
+    if (!parsed) {
+      return 5 * 60_000;
+    }
+    return Math.max(parsed, 60_000);
+  }, [period]);
+  const { data, loading, error, usingSample } = useFuturesAnalytics(symbol, {
+    period,
+    apiKey,
+    refreshMs,
+  });
 
   return (
     <section className="analytics-board">
       <header className="analytics-header">
         <div>
           <h2>合约智能监控</h2>
-          <p>追踪持仓、账户多空比与基差变化，辅助判断市场趋势。</p>
+          <p>
+            追踪持仓、账户多空比与基差变化，当前周期 {period}，辅助判断市场趋势。
+          </p>
         </div>
         {loading && <span className="analytics-status">加载中...</span>}
         {error && <span className="analytics-status warning">{error}</span>}

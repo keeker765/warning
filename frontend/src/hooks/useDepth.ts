@@ -19,7 +19,7 @@ export function useDepth(symbol: string) {
 
     async function loadInitialDepth() {
       try {
-        const response = await fetch(`https://api.binance.com/api/v3/depth?symbol=${symbol}&limit=100`);
+        const response = await fetch(`https://fapi.binance.com/fapi/v1/depth?symbol=${symbol}&limit=100`);
         const json = await response.json();
         if (!json) return;
         if (active) {
@@ -39,7 +39,7 @@ export function useDepth(symbol: string) {
   }, [symbol]);
 
   useEffect(() => {
-    const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@depth20@100ms`);
+    const ws = new WebSocket(`wss://fstream.binance.com/ws/${symbol.toLowerCase()}@depth20@100ms`);
 
     ws.onmessage = (event) => {
       const payload = JSON.parse(event.data);
