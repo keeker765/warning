@@ -21,6 +21,11 @@ npm run dev
 
 应用将默认在 `http://localhost:5173` 运行。
 
+## 测试与依赖安装
+
+- 运行 `npm install` 会安装所有前端依赖。当前环境连接公共 npm registry 时返回 `403 Forbidden`，导致安装失败；如在本地开发，请确保能够访问 `https://registry.npmjs.org/` 或配置企业镜像。
+- 依赖安装成功后，可执行 `npm run build` 或 `npm run test`（如配置测试脚本）验证构建与功能。
+
 ## 目录结构
 
 ```
