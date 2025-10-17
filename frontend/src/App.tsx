@@ -4,8 +4,6 @@ import DepthChart from './components/charts/DepthChart';
 import MetricCards from './components/charts/MetricCards';
 import TradeList from './components/trade/TradeList';
 import AlertPanel from './components/alerts/AlertPanel';
-import SymbolScreener from './components/analytics/SymbolScreener';
-import FuturesAnalyticsBoard from './components/analytics/FuturesAnalyticsBoard';
 import { useCandles } from './hooks/useCandles';
 import { useDepth } from './hooks/useDepth';
 import { useMiniTicker } from './hooks/useMiniTicker';
@@ -103,14 +101,6 @@ function App() {
         </div>
 
         <MetricCards metrics={metrics} />
-
-        <div className="chart-card analytics">
-          <FuturesAnalyticsBoard symbol={selectedSymbol} />
-        </div>
-
-        <div className="chart-card screener">
-          <SymbolScreener symbols={symbols.map((item) => item.value)} />
-        </div>
 
         <div className="chart-grid">
           <div className="chart-card depth">

@@ -7,8 +7,6 @@
 - 📈 **多图表展示**：K 线图、深度图、实时成交列表与关键指标卡片。
 - 🔔 **预警系统**：支持自定义价格上下触发条件，提供本地通知与视觉提示。
 - 🔄 **实时更新**：通过 Binance 官方 WebSocket 流实时刷新行情、深度与成交数据。
-- 🧠 **智能筛选**：根据价格与成交量的短期变化自动找出如“价涨量平”等潜在异动交易对。
-- 📊 **合约洞察墙**：六张图同步追踪永续合约持仓量、大户多空占比、主动买卖量与基差变化。
 - 🎨 **精美界面**：现代化玻璃拟态风格界面，支持响应式布局。
 
 ## 快速开始
@@ -25,7 +23,7 @@ npm run dev
 
 ## 测试与依赖安装
 
-- 运行 `npm install` 会安装所有前端依赖。若连接公共 npm registry 时遭遇 `403 Forbidden` 等错误，请确认网络权限或切换镜像源。
+- 运行 `npm install` 会安装所有前端依赖。当前环境连接公共 npm registry 时返回 `403 Forbidden`，导致安装失败；如在本地开发，请确保能够访问 `https://registry.npmjs.org/` 或配置企业镜像。
 - 依赖安装成功后，可执行 `npm run build` 或 `npm run test`（如配置测试脚本）验证构建与功能。
 
 ## 目录结构
@@ -38,15 +36,9 @@ frontend/
 │   ├── App.tsx
 │   ├── components/
 │   │   ├── alerts/
-│   │   ├── analytics/
 │   │   ├── charts/
 │   │   └── trade/
 │   ├── hooks/
-│   │   ├── useCandles.ts
-│   │   ├── useDepth.ts
-│   │   ├── useFuturesAnalytics.ts
-│   │   ├── useSymbolScreener.ts
-│   │   └── ...
 │   ├── styles/
 │   ├── types/
 │   └── main.tsx
@@ -56,7 +48,6 @@ frontend/
 ## 注意事项
 
 - Binance 公共 API 有频率限制，若出现429错误请稍后再试。
-- 部分 Binance 合约数据在受限地区不可访问，组件会自动回退至内置示例数据并给出提示。
 - 浏览器需支持 WebSocket 并允许访问外部网络。
 - 预警配置存储在浏览器 `localStorage` 中。
 
