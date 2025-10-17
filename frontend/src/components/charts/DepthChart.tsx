@@ -7,7 +7,7 @@ interface DepthChartProps {
   asks: OrderBookEntry[];
 }
 
-const tooltipFormatter = (value: number | string | Array<number | string>) => {
+const tooltipFormatter = (value: number | string | Array<number | string>): string => {
   if (Array.isArray(value)) {
     return value.map((item) => tooltipFormatter(item) as string).join(' / ');
   }
